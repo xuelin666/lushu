@@ -605,11 +605,12 @@ function buildPrompt(){
 "【第四步 · 按下面的格式输出】",
 "先看清楚每个字段是干什么的：",
 "trip     行程基本信息：名称、起止日期、人数、交通方式、硬约束",
-"days     逐日行程，一天一条，含日期、路线、车程、天气、是否需要预约",
+"days     逐日行程，一天一条，含日期、路线、车程、天气、是否需要预约。",
+"         日期一律写全年份，格式 2026-10-01；跨年行程尤其不要省年份",
 "plan     规划页那张票根上的三个数字，以及有没有需要改期的情况",
 "intel    情报页：这几天的天气、注意事项、出发前提醒",
 "packing  出门清单，按组列出，每组带数量和负责人",
-"logs     已经发生的记录；还没出发就给空数组 []",
+"logs     已经发生的记录，日期同样写全年份；还没出发就给空数组 []",
 "metrics  档案页的四个统计数字",
 "atlas    图鉴页：去过哪些地方、一共几个地方、点亮了几格",
 "",
@@ -714,7 +715,7 @@ JSON.stringify(INTEL_HINT, null, 2),
 }
 
 var SAMPLE = {
-  trip:{ title:"国庆 · 江西环线", sub:":> TRAVEL PLANNER / JIANGXI LOOP",
+  trip:{ title:"国庆 · 江西环线", sub:":> TRAVEL PLANNER / JIANGXI LOOP", year:"2026",
     start:"10/1", end:"10/8", people:4, vehicle:"电车自驾",
     constraints:["三清山必去","不想太赶","车程 ≤3h","充电优先"] },
   days:[
@@ -751,9 +752,9 @@ var SAMPLE = {
     {g:"拍摄",items:[{n:"相机",q:1},{n:"备用电池",q:2},{n:"存储卡",q:1},{n:"三脚架",q:1}]}
   ],
   logs:[
-    {date:"10/4",time:"06:12",place:"庐山 · 含鄱口",rating:5,cost:0,text:"四点起床值了。云从脚下过，一车四个人一句话都说不出来。"},
-    {date:"10/7",time:"13:40",place:"三清山 · 西海岸",rating:4,cost:245,text:"风景没得说，但人比想象的多。淡季可以走更远。"},
-    {date:"10/5",time:"21:05",place:"景德镇 · 陶溪川",rating:5,cost:168,text:"夜市比白天好看太多，拉坯体验要提前一天约。"}
+    {date:"2026-10-04",time:"06:12",place:"庐山 · 含鄱口",rating:5,cost:0,text:"四点起床值了。云从脚下过，一车四个人一句话都说不出来。"},
+    {date:"2026-10-07",time:"13:40",place:"三清山 · 西海岸",rating:4,cost:245,text:"风景没得说，但人比想象的多。淡季可以走更远。"},
+    {date:"2026-10-05",time:"21:05",place:"景德镇 · 陶溪川",rating:5,cost:168,text:"夜市比白天好看太多，拉坯体验要提前一天约。"}
   ],
   metrics:[{k:"REC",v:"12",l:"条记录"},{k:"AVG",v:"4.3",l:"平均分"},{k:"SUM",v:"¥3240",l:"总花费"},{k:"PP",v:"¥812",l:"人均"}],
   atlas:{ stamp:"解锁进度", stats:[{v:"4",l:"地 · 已点亮"},{v:"11",l:"地 · 全省"},{v:"4",l:"条 · 轨迹"}],
@@ -765,15 +766,15 @@ var SAMPLE = {
 };
 
 var SCHEMA_HINT = {
-  trip:{ title:"行程名", sub:"副标题", start:"10/1", end:"10/8", people:4, vehicle:"电车自驾", constraints:["硬约束1","硬约束2"] },
-  days:[{ n:1, date:"10/1", route:"A → B", drive:"2h10 / 158km", weather:"多云 20–28℃", booking:"需预约的项目，没有填 null", key:false, rain:false }],
+  trip:{ title:"行程名", sub:"副标题", year:"2026", start:"2026-10-01", end:"2026-10-08", people:4, vehicle:"电车自驾", constraints:["硬约束1","硬约束2"] },
+  days:[{ n:1, date:"2026-10-01", route:"A → B", drive:"2h10 / 158km", weather:"多云 20–28℃", booking:"需预约的项目，没有填 null", key:false, rain:false }],
   plan:{ stamp:"方案已就绪", stats:[{v:"8",l:"天 · 行程"},{v:"812",l:"km · 里程"},{v:"3",l:"处 · 待预约"}],
     warn:{ stamp:"已改期", title:"改期的原因", from:"10/4", to:"10/7", impact:"影响说明" } },
   intel:{ weather:[{d:"1",t:"多云",r:"20/28",rain:false}],
     notes:[{lv:"red|gold|空字符串",t:"标题",b:"说明"}],
     reminders:[{w:"出发前 3 天",t:"提醒内容"}], channel:["ntfy","设备名"] },
   packing:[{ g:"分组名", items:[{n:"物品名",q:1}] }],
-  logs:[{ date:"10/4",time:"06:12",place:"地点",rating:5,cost:0,text:"一句话" }],
+  logs:[{ date:"2026-10-04",time:"06:12",place:"地点",rating:5,cost:0,text:"一句话" }],
   metrics:[{k:"REC",v:"12",l:"条记录"}],
   atlas:{ stamp:"解锁进度", stats:[{v:"4",l:"地 · 已点亮"},{v:"11",l:"地 · 全省"},{v:"4",l:"条 · 轨迹"}],
     total:11, cells:[{n:"地区名",on:true,lock:false}], visited:[{n:"地区",d:"D1–D2",t:"去了哪"}] }
@@ -877,17 +878,37 @@ var HERO={"01 / PLAN":"纸飞机","02 / INTEL":"海边","03 / LOADOUT":"购物",
 function mini(gif,tag,text,pending){ return '<div class="ls-card ls-mini">'+img(gif)+
   '<div class="ls-minib"><span class="ls-monotag'+(pending?" pending":"")+'">'+tag+'</span><p>'+esc(text)+'</p></div></div>'; }
 
+function tripYear(){
+  var t = DATA.trip || {};
+  var m = String(t.start||"").match(/(20\d{2})/) || String(t.from||"").match(/(20\d{2})/);
+  if(m) return parseInt(m[1],10);
+  if(t.year) return parseInt(t.year,10);
+  return new Date().getFullYear();
+}
+function parseDate(d){
+  var s = String(d||"").trim();
+  if(!s) return null;
+  var m = s.match(/^(?:(\d{4})\s*[-\/年]\s*)?(\d{1,2})\s*[-\/月]\s*(\d{1,2})/);
+  if(!m) return null;
+  return { y: m[1] ? parseInt(m[1],10) : tripYear(),
+           m: parseInt(m[2],10), d: parseInt(m[3],10) };
+}
 function monthKey(d){
-  var m = String(d||"").match(/(\d{1,2})/);
-  return m ? (parseInt(m[1],10) + " 月") : "未标注日期";
+  var p = parseDate(d);
+  return p ? (p.y + " 年 " + p.m + " 月") : "未标注日期";
+}
+function dayFull(d){
+  var p = parseDate(d);
+  if(!p) return "—";
+  return p.y + "-" + ("0"+p.m).slice(-2) + "-" + ("0"+p.d).slice(-2);
 }
 function sortedLogs(){
   var L = (DATA.logs||[]).map(function(l,i){ return {l:l, i:i}; });
-  var all = L.length > 0 && L.every(function(x){ return /^\s*\d{1,2}\s*\/\s*\d{1,2}/.test(x.l.date||""); });
+  var all = L.length > 0 && L.every(function(x){ return !!parseDate(x.l.date); });
   if(all){
     L.sort(function(a,b){
-      var pa = a.l.date.split("/"), pb = b.l.date.split("/");
-      return (parseInt(pa[0],10)*100 + parseInt(pa[1],10)) - (parseInt(pb[0],10)*100 + parseInt(pb[1],10));
+      var pa = parseDate(a.l.date), pb = parseDate(b.l.date);
+      return (pa.y*10000 + pa.m*100 + pa.d) - (pb.y*10000 + pb.m*100 + pb.d);
     });
   }
   return L;
@@ -914,14 +935,13 @@ function planText(){
 }
 function icsText(){
   var t = DATA.trip||{};
-  var year = (String(t.from||"").match(/(\d{4})/)||[])[1] || (String(t.start||"").match(/(\d{4})/)||[])[1] || new Date().getFullYear();
   var pad = function(x){ return ("0"+x).slice(-2); };
   var lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//lushu//CN","CALSCALE:GREGORIAN"];
   (DATA.days||[]).forEach(function(d){
-    var m = String(d.date||"").match(/(\d{1,2})\s*\/\s*(\d{1,2})/);
-    if(!m) return;
-    var start = year + pad(m[1]) + pad(m[2]);
-    var dd = new Date(parseInt(year,10), parseInt(m[1],10)-1, parseInt(m[2],10));
+    var p = parseDate(d.date);
+    if(!p) return;
+    var start = p.y + pad(p.m) + pad(p.d);
+    var dd = new Date(p.y, p.m-1, p.d);
     dd.setDate(dd.getDate()+1);
     var end = dd.getFullYear() + pad(dd.getMonth()+1) + pad(dd.getDate());
     var sum = "D" + d.n + " " + (d.route||"") + (d.drive ? " · " + d.drive : "") + (d.booking ? " · 预约：" + d.booking : "");
@@ -1205,7 +1225,7 @@ function render(){
       '<div class="ls-loghead">'+img("EMO_拍照","ls-sticker")+'<span class="ls-clabel">'+
         (editLog===null?"写一条新记录 · 位置会自动带上":"正在修改第 "+(editLog+1)+" 条")+'</span></div>'+
       '<div class="ls-cform">'+
-        '<div><div class="ls-clabel">日期</div><input data-new="date" data-focus="date" value="'+esc(draft.date)+'" placeholder="10/4"></div>'+
+        '<div><div class="ls-clabel">日期</div><input data-new="date" data-focus="date" value="'+esc(draft.date)+'" placeholder="2026-10-04"></div>'+
         '<div><div class="ls-clabel">时间</div><input data-new="time" data-focus="time" value="'+esc(draft.time)+'" placeholder="06:12"></div>'+
         '<div><div class="ls-clabel">花费</div><input data-new="cost" data-focus="cost" value="'+esc(draft.cost)+'" placeholder="0"></div>'+
         '<div class="full"><div class="ls-clabel">地点</div><input data-new="place" data-focus="place" value="'+esc(draft.place)+'" placeholder="庐山 · 含鄱口"></div>'+
