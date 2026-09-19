@@ -263,6 +263,35 @@ body{margin:0;padding:22px 12px 60px;background:#e9e6dc;
 .ls-rem:focus{outline:none;border-bottom-color:#34b1db;border-bottom-style:solid}
 .ls-switch .ls-rem.w{flex:0 0 84px;font-weight:600;color:#1e8cc7}
 .ls-switch .ls-rem.t{flex:1}
+
+/* 功能卡：模板 / 采购 / 归档 / 导出 */
+.ls-panel{display:block;padding:11px 12px}
+.ls-panel .ls-loghead{margin-bottom:4px}
+.ls-panelp{margin:4px 0 0;font-size:11.5px;color:#6d8fa4}
+.ls-shop{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.ls-shopg{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;font-size:11.5px;color:#2a5f86}
+.ls-shopg b{flex:0 0 100%;font-size:10px;letter-spacing:.12em;color:#9db3bf;
+  font-family:ui-monospace,Consolas,monospace;font-weight:500}
+.ls-shopg span{border:1px solid #dbeef8;background:#f4fafd;border-radius:99px;padding:1px 8px;color:#2a5f86}
+.ls-tplrow{display:flex;gap:6px;margin-top:7px}
+.ls-tplname{flex:1;min-width:0;border:0;border-bottom:1.5px dashed #dbeef8;background:transparent;
+  font:inherit;font-size:11.5px;color:#1e8cc7;padding:2px 0}
+.ls-tplname:focus{outline:none;border-bottom-color:#34b1db;border-bottom-style:solid}
+.ls-tplist{display:flex;flex-direction:column;gap:5px;margin-top:7px}
+.ls-tplitem{display:flex;align-items:center;gap:6px;border-top:1.5px dashed #eef4f7;padding-top:5px}
+.ls-tpname{flex:1;min-width:0;font-size:11.5px;color:#2a5f86;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ls-tpname i{font-style:normal;color:#9db3bf;font-size:10px;margin-left:5px;font-family:ui-monospace,Consolas,monospace}
+.ls-apply{flex:0 0 auto;border:1.5px solid #dbeef8;background:#f4fafd;color:#1e8cc7;font:inherit;font-size:11px;
+  border-radius:99px;padding:2px 10px;cursor:pointer}
+.ls-apply:hover{border-color:#34b1db}
+.ls-monthrow{margin:10px 0 2px;color:#9db3bf;letter-spacing:.14em;border-bottom:1.5px dashed #eef4f7;padding-bottom:3px}
+.ls-monthrow:first-child{margin-top:2px}
+.ls-monotag.pending{background:#c9d6dd}
+.ls-toast{position:absolute;left:12px;right:12px;bottom:12px;z-index:9;
+  background:rgba(30,140,199,.96);color:#fff;font-size:11.5px;line-height:1.5;
+  border-radius:10px;padding:8px 12px;text-align:center;
+  opacity:0;transform:translateY(6px);transition:opacity .18s,transform .18s;pointer-events:none}
+.ls-toast.on{opacity:1;transform:none}
 .ls-logtop{gap:5px}
 .ls-logtop>span:first-child{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ls-logedit,.ls-logx{flex:0 0 auto;width:20px;height:20px;border-radius:6px;font-size:11px;line-height:1;
@@ -433,6 +462,7 @@ body{margin:0;padding:22px 12px 60px;background:#e9e6dc;
       <label class="ls-tab" for="ls-d5"><img src="data:image/webp;base64,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" alt=""><b>图鉴</b><span class="ls-mono">ATLAS</span></label>
     </nav>
     <img class="ls-side" src="data:image/webp;base64,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" alt="">
+    <div class="ls-toast" id="toast" role="status" aria-live="polite"></div>
   </div>
 </div>
 
@@ -761,6 +791,9 @@ var intelEditing = false;
 var editLog = null;
 var draft = {date:"",time:"",place:"",cost:"",rating:0,text:"",photo:null};
 var draftMsg = "";
+var TPLSTORE = "lushu.templates.v1";
+var templates = [];
+var tplName = "";
 var pendingFocus = null;
 
 try{
@@ -771,6 +804,8 @@ try{
   editing = localStorage.getItem(EDITSTORE) === "1";
   logEditing = localStorage.getItem(LOGEDITSTORE) === "1";
   intelEditing = localStorage.getItem("lushu.inteledit.v1") === "1";
+  var rt2 = localStorage.getItem(TPLSTORE);
+  if(rt2) templates = JSON.parse(rt2) || [];
 }catch(e){}
 
 function newId(){ return "i" + Date.now().toString(36) + Math.floor(Math.random()*1679616).toString(36); }
@@ -787,6 +822,7 @@ function saveAll(){
     localStorage.setItem(EDITSTORE, editing ? "1" : "0");
     localStorage.setItem(LOGEDITSTORE, logEditing ? "1" : "0");
     localStorage.setItem("lushu.inteledit.v1", intelEditing ? "1" : "0");
+    localStorage.setItem(TPLSTORE, JSON.stringify(templates));
   }catch(e){}
 }
 
@@ -838,8 +874,146 @@ function img(k,cls){ if(!A[k]) return ""; return '<img'+(cls?' class="'+cls+'"':
 function hero(tag,title){ return '<div class="ls-hero">'+img("GIF_"+HERO[tag],"ls-hero-gif")+
   '<div class="ls-mono ls-hero-tag">:&gt; '+tag+'</div><h1>'+title+'</h1>'+img("UI_11","ls-hero-en")+'</div>'; }
 var HERO={"01 / PLAN":"纸飞机","02 / INTEL":"海边","03 / LOADOUT":"购物","04 / ARCHIVE":"拍照","05 / ATLAS":"探险"};
-function mini(gif,tag,text){ return '<div class="ls-card ls-mini">'+img(gif)+
-  '<div class="ls-minib"><span class="ls-monotag">'+tag+'</span><p>'+esc(text)+'</p></div></div>'; }
+function mini(gif,tag,text,pending){ return '<div class="ls-card ls-mini">'+img(gif)+
+  '<div class="ls-minib"><span class="ls-monotag'+(pending?" pending":"")+'">'+tag+'</span><p>'+esc(text)+'</p></div></div>'; }
+
+function monthKey(d){
+  var m = String(d||"").match(/(\d{1,2})/);
+  return m ? (parseInt(m[1],10) + " 月") : "未标注日期";
+}
+function sortedLogs(){
+  var L = (DATA.logs||[]).map(function(l,i){ return {l:l, i:i}; });
+  var all = L.length > 0 && L.every(function(x){ return /^\s*\d{1,2}\s*\/\s*\d{1,2}/.test(x.l.date||""); });
+  if(all){
+    L.sort(function(a,b){
+      var pa = a.l.date.split("/"), pb = b.l.date.split("/");
+      return (parseInt(pa[0],10)*100 + parseInt(pa[1],10)) - (parseInt(pb[0],10)*100 + parseInt(pb[1],10));
+    });
+  }
+  return L;
+}
+function shortList(){
+  var out = [], n = 0;
+  (DATA.packing||[]).forEach(function(g){
+    var items = (g.items||[]).filter(function(it2){ return !checked[it2.id]; });
+    if(items.length){ out.push({g:g.g, items:items}); n += items.length; }
+  });
+  return {groups:out, total:n};
+}
+function planText(){
+  var t = DATA.trip||{};
+  var s = (t.title||"行程") + "\n" + (t.start||"") + " – " + (t.end||"") + " · " + (t.people||"") + " 人 · " + (t.vehicle||"") + "\n\n";
+  (DATA.days||[]).forEach(function(d){
+    s += "D" + d.n + " " + (d.date||"") + "  " + (d.route||"") ;
+    if(d.drive) s += "  · " + d.drive;
+    if(d.weather) s += "  · " + d.weather;
+    if(d.booking) s += "  · 需预约：" + d.booking;
+    s += "\n";
+  });
+  return s;
+}
+function icsText(){
+  var t = DATA.trip||{};
+  var year = (String(t.from||"").match(/(\d{4})/)||[])[1] || (String(t.start||"").match(/(\d{4})/)||[])[1] || new Date().getFullYear();
+  var pad = function(x){ return ("0"+x).slice(-2); };
+  var lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//lushu//CN","CALSCALE:GREGORIAN"];
+  (DATA.days||[]).forEach(function(d){
+    var m = String(d.date||"").match(/(\d{1,2})\s*\/\s*(\d{1,2})/);
+    if(!m) return;
+    var start = year + pad(m[1]) + pad(m[2]);
+    var dd = new Date(parseInt(year,10), parseInt(m[1],10)-1, parseInt(m[2],10));
+    dd.setDate(dd.getDate()+1);
+    var end = dd.getFullYear() + pad(dd.getMonth()+1) + pad(dd.getDate());
+    var sum = "D" + d.n + " " + (d.route||"") + (d.drive ? " · " + d.drive : "") + (d.booking ? " · 预约：" + d.booking : "");
+    var desc = (d.weather ? "天气 " + d.weather + "\\n" : "") + (d.booking ? "需预约：" + d.booking : "");
+    lines.push("BEGIN:VEVENT");
+    lines.push("UID:lushu-" + start + "-" + d.n + "@lushu");
+    lines.push("DTSTART;VALUE=DATE:" + start);
+    lines.push("DTEND;VALUE=DATE:" + end);
+    lines.push("SUMMARY:" + sum.replace(/,/g,"\\,"));
+    if(desc) lines.push("DESCRIPTION:" + desc.replace(/,/g,"\\,"));
+    lines.push("END:VEVENT");
+  });
+  lines.push("END:VCALENDAR");
+  return lines.join("\r\n");
+}
+function download(name, text, mime){
+  var blob = new Blob([text], {type: mime || "text/plain;charset=utf-8"});
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function toast(text2){
+  var el = document.getElementById("toast");
+  if(!el){ return; }
+  el.textContent = text2;
+  el.classList.add("on");
+  if(toast._t) clearTimeout(toast._t);
+  toast._t = setTimeout(function(){ el.classList.remove("on"); }, 2800);
+}
+function copyText(txt, okMsg){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ toast(okMsg); },
+      function(){ toast("复制被浏览器拦了，先下载或长按手动复制"); });
+  }else{
+    toast("这个浏览器不支持自动复制");
+  }
+}
+function buildBooklet(){
+  var t = DATA.trip||{};
+  var recs = sortedLogs();
+  var short = shortList();
+  var body = "";
+  recs.forEach(function(x){
+    var l = x.l;
+    body += '<section class="r">'+
+      (l.photo ? '<img class="p" src="'+l.photo+'" alt="">' : '')+
+      '<div class="h"><span class="d">'+esc(l.date)+" "+esc(l.time)+'</span><span class="c">¥'+esc(l.cost==null?0:l.cost)+'</span></div>'+
+      '<h2>'+esc(l.place)+'</h2>'+
+      '<div class="s">'+"★".repeat(Math.max(0,Math.min(5,Number(l.rating)||0)))+"☆".repeat(5-Math.max(0,Math.min(5,Number(l.rating)||0)))+'</div>'+
+      '<p>'+esc(l.text)+'</p></section>';
+  });
+  var shop = "";
+  if(short.total){
+    shop = '<section class="r"><h2>还没装齐</h2><ul>'+
+      short.groups.map(function(g){
+        return '<li><b>'+esc(g.g)+'</b>：'+g.items.map(function(it2){ return esc(it2.n)+" × "+esc(it2.q); }).join("、")+'</li>';
+      }).join("")+'</ul></section>';
+  }
+  var days = '';
+  if((DATA.days||[]).length){
+    days = '<section class="r"><h2>行程</h2><table>'+
+      DATA.days.map(function(d){ return '<tr><td>D'+esc(d.n)+'</td><td>'+esc(d.date)+'</td><td>'+esc(d.route)+'</td><td>'+esc(d.drive)+'</td><td>'+esc(d.weather)+'</td></tr>'; }).join("")+
+      '</table></section>';
+  }
+  return '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">'+
+    '<meta name="viewport" content="width=device-width,initial-scale=1">'+
+    '<title>'+esc(t.title||"路书")+' · 图文小册子</title><style>'+
+    'body{margin:0 auto;max-width:720px;padding:32px 22px 60px;background:#f6f4ee;color:#2a5f86;'+
+    'font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.7}'+
+    'h1{font-size:26px;margin:0 0 4px}h2{font-size:16px;margin:0 0 4px}'+
+    '.cover{border-bottom:3px dashed #cfd9de;padding-bottom:18px;margin-bottom:22px}'+
+    '.cover .m{color:#6d8fa4;font-size:13px}'+
+    '.r{padding:16px 0;border-bottom:1.5px dashed #dfe7ec;page-break-inside:avoid}'+
+    '.r img.p{width:100%;border-radius:10px;margin-bottom:10px}'+
+    '.h{display:flex;justify-content:space-between;color:#9db3bf;font-size:12px;font-family:ui-monospace,Consolas,monospace}'+
+    '.s{color:#dfa32a;letter-spacing:3px;font-size:15px;margin:2px 0 6px}'+
+    'p{margin:0;font-size:14px;white-space:pre-wrap}'+
+    'table{width:100%;border-collapse:collapse;font-size:13px}'+
+    'td{padding:5px 8px 5px 0;border-bottom:1px solid #e8eef2;vertical-align:top}'+
+    'td:first-child{color:#1e8cc7;font-family:ui-monospace,Consolas,monospace;white-space:nowrap}'+
+    'ul{padding-left:18px;font-size:13px}'+
+    '.btn{margin:22px 0;padding:9px 18px;border:0;border-radius:99px;background:#1e8cc7;color:#fff;'+
+    'font-size:14px;cursor:pointer}'+
+    '@media print{body{background:#fff;padding:0;max-width:none}.btn{display:none}}'+
+    '</style></head><body>'+
+    '<div class="cover"><h1>'+esc(t.title||"路书")+'</h1>'+
+    '<div class="m">'+esc(t.start||"")+' – '+esc(t.end||"")+' · '+esc(t.people||"")+' 人 · '+esc(t.vehicle||"")+' · 共 '+recs.length+' 条记录</div></div>'+
+    '<button class="btn" onclick="window.print()">打印 / 另存为 PDF</button>'+
+    days + shop + body +
+    '</body></html>';
+}
 function ticket(stamp,stats,corner){ var s='<div class="ls-ticket"><div class="ls-stamp"><span>'+esc(stamp)+'</span></div><div class="ls-stats3">';
   (stats||[]).forEach(function(x){ s+='<div><b>'+esc(x.v)+'</b><i>'+esc(x.l)+'</i></div>'; });
   s+='</div>'+(corner||'')+'</div>'; return s; }
@@ -904,7 +1078,11 @@ function render(){
       return '<div class="ls-row'+(d.key?" ls-key":"")+'">'+(d.key?img("UI_23","ls-rowicon"):"")+
         '<b>D'+esc(d.n)+'</b><span>'+esc(d.route)+'</span><i>'+esc(d.drive)+'</i>'+
         '<i class="ls-wxchip'+(d.rain?" ls-rain":"")+'">'+esc(d.weather)+'</i></div>'; }).join("")+'</div>';
-  h += mini("GIF_送货","导出","一键导出 GPX 与日历，出发前同步给四个人。");
+  h += '<div class="ls-card ls-panel"><div class="ls-loghead">'+img("GIF_送货","ls-sticker")+
+       '<span class="ls-clabel">导出 · '+(DATA.days||[]).length+' 天行程</span></div>'+
+       '<p class="ls-panelp">每天生成一条全天日历事件，导进手机日历，四个人看同一份。</p>'+
+       '<div class="ls-cfoot"><button class="ls-save" data-ics>下载日历 .ics</button>'+
+       '<button class="ls-cancel" data-copydays>复制成文字</button></div></div>';
   h += '</section>';
 
   /* 02 情报 */
@@ -949,11 +1127,12 @@ function render(){
        }).join("")+
        (intelEditing?'<button class="ls-add" data-addrem>＋ 添加一条提醒</button>':'')+
        '<div class="ls-foot">'+(it.channel||[]).map(function(c){ return '<span class="ls-pill ls-mono">'+esc(c)+'</span>'; }).join("")+'</div></div>';
-  h += mini("GIF_潜水","重试","提醒没收到会重试三次，不会静默失败。");
+  h += mini("GIF_潜水","待接入","推送要配好 ntfy 才能真正发到手机，现在只做到界面。",true);
   h += '</section>';
 
   /* 03 装备 */
   var pk = packRows();
+  var short = shortList();
   h += '<section class="ls-sc sc3">' + hero("03 / LOADOUT","装备");
   h += '<div class="ls-wrapline">'+img("UI_2","ls-vine")+
        ticket("出门装备",[{v:String(pk.done),l:"项 · 已装"},{v:String(pk.total),l:"项 · 合计"},{v:String((DATA.packing||[]).length),l:"组 · 分类"}], img("UI_23","ls-ticket-lemon"))+'</div>';
@@ -963,8 +1142,28 @@ function render(){
        (editing?"增删物品、改数量、改分组名":"点这里可以自由增删")+'</span></div>';
   h += '<div class="ls-grid">'+pk.html+
        (editing?"":'<div class="ls-grp ls-empty">'+img("EMO_看书")+'<span>装完记得对一遍<br>分工写清楚，别都以为别人带了</span></div>')+'</div>';
-  h += mini("GIF_看书","模板","模板会记住这次的清单，下次出发直接复用。");
-  h += mini("EMO_购物","采购","还没装齐的会按分类列成一张购物清单。");
+  h += '<div class="ls-card ls-panel"><div class="ls-loghead">'+img("EMO_购物","ls-sticker")+
+       '<span class="ls-clabel">采购清单 · '+short.total+' 项没装</span></div>'+
+       (short.total
+         ? '<div class="ls-shop">'+short.groups.map(function(s){
+             return '<div class="ls-shopg"><b>'+esc(s.g)+'</b>'+
+               s.items.map(function(it2){ return '<span>'+esc(it2.n)+' × '+esc(it2.q)+'</span>'; }).join("")+'</div>';
+           }).join("")+'</div><div class="ls-cfoot"><button class="ls-save" data-copyshop>复制采购清单</button></div>'
+         : '<p class="ls-panelp">全部装齐了，可以出发。</p>')+
+       '</div>';
+  h += '<div class="ls-card ls-panel"><div class="ls-loghead">'+img("GIF_看书","ls-sticker")+
+       '<span class="ls-clabel">清单模板 · '+templates.length+' 个已存</span></div>'+
+       '<p class="ls-panelp">把当前这套清单存下来，下次出发直接套用。</p>'+
+       '<div class="ls-tplrow"><input class="ls-tplname" id="tpl-name" data-tplname placeholder="给这套清单起个名字">'+
+       '<button class="ls-apply" data-savetpl>存为模板</button></div>'+
+       (templates.length
+         ? '<div class="ls-tplist">'+templates.map(function(t2,i){
+             return '<div class="ls-tplitem"><span class="ls-tpname">'+esc(t2.name)+'<i>'+t2.count+' 项</i></span>'+
+               '<button class="ls-apply" data-applytpl="'+i+'">套用</button>'+
+               '<button class="ls-x" data-deltpl="'+i+'">×</button></div>';
+           }).join("")+'</div>'
+         : '')+
+       '</div>';
   h += '</section>';
 
   /* 04 档案 */
@@ -975,7 +1174,17 @@ function render(){
        (logEditing?"✓ 编辑完成":"✎ 编辑记录")+'</button><span class="ls-mono">'+
        (logEditing?"✎ 改内容，× 删掉":"点照片位就能换图")+'</span></div>';
   h += '<div class="ls-logs">';
-  (DATA.logs||[]).forEach(function(l,i){
+  var ordered = sortedLogs();
+  var orderKeys = ordered.map(function(x){ return monthKey(x.l.date); });
+  var lastKey = null;
+  ordered.forEach(function(x){
+    var l = x.l, i = x.i;
+    var key = monthKey(l.date);
+    if(key !== lastKey){
+      lastKey = key;
+      var cnt = orderKeys.filter(function(k){ return k === key; }).length;
+      h += '<div class="ls-monthrow ls-mono">'+esc(key)+' · '+cnt+' 条</div>';
+    }
     var bg = l.photo ? ' style="background-image:url('+l.photo+')"' : '';
     h += '<div class="ls-log">'+
       '<label class="ls-photo p'+((i%3)+1)+(l.photo?" has-photo":"")+'"'+bg+'>'+
@@ -1012,8 +1221,13 @@ function render(){
   h += '</div>';
   h += '<div class="ls-thanks">'+img("UI_1","ls-thanks-bg")+img("UI_9","ls-thanks-cn")+
        '<div class="ls-thanks-tx">行程结束 · 共 '+esc((DATA.days||[]).length)+' 天<br>这条路你已经走完了</div>'+img("EMO_坐坐","ls-thanks-em")+'</div>';
-  h += mini("GIF_坐坐","归档","记录会自动按月归档，明年这个时候翻得到。");
-  h += mini("EMO_纸飞机","导出","写好的记录可以直接导出成一本图文小册子。");
+  h += '<div class="ls-card ls-panel"><div class="ls-loghead">'+img("GIF_坐坐","ls-sticker")+
+       '<span class="ls-clabel">归档 · 按月分组</span></div>'+
+       '<p class="ls-panelp">'+(DATA.logs||[]).length+' 条记录，分成 '+orderKeys.filter(function(k,i2,a){ return a.indexOf(k)===i2; }).length+' 个月，列表已按日期排好序。</p></div>';
+  h += '<div class="ls-card ls-panel"><div class="ls-loghead">'+img("EMO_纸飞机","ls-sticker")+
+       '<span class="ls-clabel">导出 · 图文小册子</span></div>'+
+       '<p class="ls-panelp">生成一个单文件，照片、评分、备注、采购残留都在里面，可以直接打印或存成 PDF。</p>'+
+       '<div class="ls-cfoot"><button class="ls-save" data-book>下载图文小册子</button></div></div>';
   h += '</section>';
 
   /* 05 图鉴 */
@@ -1031,7 +1245,7 @@ function render(){
   h += '<div class="ls-party"><div class="ls-mono ls-label">同行 '+esc(t.people||"")+' 人</div>'+img("UI_16")+img("UI_20")+'</div>';
   h += '<div class="ls-fog">'+img("UI_17","ls-fogimg")+img("EMO_骑行","ls-fogem")+
        '迷雾层用手机定位轨迹驱动。这次回来有真实轨迹了再打开，比现在凭空铺一层灰更准。</div>';
-  h += mini("GIF_骑行","轨迹","轨迹按天切段，走错的路也会留在图上。");
+  h += mini("GIF_骑行","待接入","轨迹要读手机定位，得等打包成 APK 之后才能做。",true);
   h += '</section>';
 
   document.getElementById("body").innerHTML = h;
@@ -1100,6 +1314,8 @@ function bind(){
       if(DATA.intel && DATA.intel.reminders && DATA.intel.reminders[+ds.rw]){ DATA.intel.reminders[+ds.rw].w = t.value; saveAll(); }
     }else if(ds.rt){
       if(DATA.intel && DATA.intel.reminders && DATA.intel.reminders[+ds.rt]){ DATA.intel.reminders[+ds.rt].t = t.value; saveAll(); }
+    }else if(ds.tplname !== undefined){
+      tplName = t.value;
     }
   });
 
@@ -1113,9 +1329,57 @@ function bind(){
 
   /* 增删：改完重绘 */
   host.addEventListener("click", function(e){
-    var t = e.target.closest ? e.target.closest("[data-edit-toggle],[data-additem],[data-delitem],[data-addgroup],[data-delgroup],[data-log-edit-toggle],[data-dellog],[data-editlog],[data-canceledit],[data-addlog],[data-setstar],[data-intel-edit-toggle],[data-addnote],[data-delnote],[data-addrem],[data-delrem]") : null;
+    var t = e.target.closest ? e.target.closest("[data-edit-toggle],[data-additem],[data-delitem],[data-addgroup],[data-delgroup],[data-log-edit-toggle],[data-dellog],[data-editlog],[data-canceledit],[data-addlog],[data-setstar],[data-intel-edit-toggle],[data-addnote],[data-delnote],[data-addrem],[data-delrem],[data-copyshop],[data-savetpl],[data-applytpl],[data-deltpl],[data-ics],[data-copydays],[data-book]") : null;
     if(!t) return;
     var ds = t.dataset;
+    if(ds.copyshop !== undefined){
+      var sl = shortList();
+      if(!sl.total){ toast("清单已经装齐了，没有要采购的。"); return; }
+      var txt = "采购清单\n\n" + sl.groups.map(function(g){
+        return g.g + "：" + g.items.map(function(it2){ return it2.n + " × " + it2.q; }).join("、");
+      }).join("\n");
+      copyText(txt, "采购清单已复制 · 共 " + sl.total + " 项");
+      return;
+    }
+    if(ds.savetpl !== undefined){
+      var nm = (tplName || "").trim() || ("清单 " + (templates.length+1));
+      var cnt = 0;
+      (DATA.packing||[]).forEach(function(g){ cnt += (g.items||[]).length; });
+      templates.push({ name: nm, count: cnt, packing: JSON.parse(JSON.stringify(DATA.packing||[])) });
+      tplName = "";
+      saveAll(); render();
+      toast("已存为模板「"+nm+"」，共 "+cnt+" 项。");
+      return;
+    }
+    if(ds.applytpl !== undefined){
+      var tpl = templates[parseInt(ds.applytpl,10)];
+      if(!tpl) return;
+      DATA.packing = JSON.parse(JSON.stringify(tpl.packing||[]));
+      checked = {};
+      saveAll(); render();
+      toast("已套用模板「"+tpl.name+"」，勾选状态已重置。");
+      return;
+    }
+    if(ds.deltpl !== undefined){
+      templates.splice(parseInt(ds.deltpl,10), 1);
+      saveAll(); render();
+      toast("模板已删除。");
+      return;
+    }
+    if(ds.ics !== undefined){
+      download(((DATA.trip&&DATA.trip.title)||"路书") + ".ics", icsText(), "text/calendar;charset=utf-8");
+      toast("日历文件已下载，导进手机日历即可。");
+      return;
+    }
+    if(ds.copydays !== undefined){
+      copyText(planText(), "行程文字已复制");
+      return;
+    }
+    if(ds.book !== undefined){
+      download(((DATA.trip&&DATA.trip.title)||"路书") + "-小册子.html", buildBooklet(), "text/html;charset=utf-8");
+      toast("小册子已下载。打开它，里面有「打印 / 另存为 PDF」按钮。");
+      return;
+    }
     if(ds.intelEditToggle !== undefined){
       intelEditing = !intelEditing; saveAll(); render(); return;
     }
