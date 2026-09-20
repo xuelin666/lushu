@@ -666,6 +666,7 @@ function buildPrompt(){
 "atlas    图鉴页：去过哪些地方、一共几个地方、点亮了几格",
 "",
 "严格要求：只输出一个 JSON 对象，不要写任何解释文字，不要用代码块包裹。",
+"下面这段结构是参考，请填成真实内容再输出，**不要把示例原样抄回来**。",
 "字段名不要改，没有的信息填 null 或空数组。结构如下：",
 "",
 JSON.stringify(SCHEMA_HINT, null, 2)
@@ -683,19 +684,18 @@ opening,
 "",
 "请按顺序做三件事，不要跳步：",
 "",
-"一、先根据我上面这句话，把下面需求单里所有【】的部分改成适合我们的内容，",
-"    然后把补全后的完整需求单原样打印出来给我看。",
-"二、检查补全后的需求单有没有明显矛盾——比如天数对不上、景点之间太远、季节不合适、",
-"    人数和交通方式不匹配。有的话直接改掉，并用一句话说明你改了什么。",
-"三、然后联网搜索核实必要信息，按需求单最后要求的格式输出最终结果。",
-"",
-"──────────────── 需求单 ────────────────",
-"目的地：【请你根据我的描述填】",
-"出发日期：【请你根据我的描述填】",
-"返回日期：【请你根据我的描述填】",
-"人数：【请你根据我的描述填】",
-"交通方式：【请你根据我的描述填】",
-"特别要求：【请你根据我的描述补充，不确定就留空】",
+"一、先把我上面这句话补全成一份需求单。**只打印下面这六行，别的什么都不要打印**：",
+"    目的地：",
+"    出发日期：",
+"    返回日期：",
+"    人数：",
+"    交通方式：",
+"    特别要求：",
+"    ⚠️ 下面的 JSON 结构示例是给你自己看的参考，**千万不要抄进你的回复里**。",
+"二、检查这份需求单有没有明显矛盾——天数对不上、景点之间太远、季节不合适、人数和交通方式不匹配。",
+"    有就改掉，并用一句话说明你改了什么。",
+"三、联网搜索核实必要信息，然后在**最后**输出一个完整的 JSON 对象。",
+"    ⚠️ 第三步必须做，不要在第二步就结束——没有 JSON 的话我这边什么都读不到。",
 "",
 "【先搜这些】",
 "1. 每个景点在行程日期内的开放时间、是否需要提前预约、放票时间、限流规则",
@@ -716,9 +716,10 @@ opening,
 "metrics  档案页的四个统计数字",
 "atlas    图鉴页：去过哪些地方、一共几个地方、点亮了几格",
 "",
-"【输出格式】",
-"最后必须输出一个完整的 JSON 对象。你可以先打印需求单和检查说明，但结尾那段 JSON 要完整、可直接复制。",
-"字段名不要改，没有的信息填 null 或空数组。结构如下：",
+"【输出格式 · 只在最后输出，不要抄进需求单】",
+"结尾必须给出一个完整的 JSON 对象，可以直接复制。字段名不要改，没有的信息填 null 或空数组。",
+"再说一次：下面这段结构是参考，**请把它填成真实内容再输出，不要把示例原样抄回来**。",
+"结构如下：",
 "",
 JSON.stringify(SCHEMA_HINT, null, 2),
 "─────────────────────────────────────"
@@ -1611,23 +1612,38 @@ function balancedObjects(s){
   return out;
 }
 
+/* 模板回显识别：AI 有时候会把提示词里的结构示例原样抄回来，
+   那样的对象长得「字段特别全」，很容易骗过打分逻辑，必须单独识别出来踢掉。 */
+var TPL_MARKERS = ["行程名","副标题","硬约束1","硬约束2","A → B","需预约的项目",
+                   "分组名","物品名","地区名","去了哪","注意事项标题","提醒内容"];
+function looksLikeTemplate(o){
+  try{
+    var s = JSON.stringify(o), n = 0;
+    for(var i=0;i<TPL_MARKERS.length;i++){ if(s.indexOf(TPL_MARKERS[i]) >= 0) n++; }
+    return n >= 2;
+  }catch(e){ return false; }
+}
+
 function extractJSON(text){
   var s = String(text||"").replace(/```[a-zA-Z]*/g,"").replace(/```/g,"");
   if(s.indexOf("{") < 0) throw new Error("没找到 JSON 对象");
   var cands = balancedObjects(s);
   if(!cands.length) throw new Error("括号没有配对，可能是被截断了");
-  var best = null, bestScore = -1;
+  var best = null, bestScore = -1, tplSeen = false;
   for(var i=0;i<cands.length;i++){
     var o;
     try{ o = JSON.parse(cands[i]); }
     catch(e){ continue; }
     if(!o || typeof o !== "object" || Array.isArray(o)) continue;
+    if(looksLikeTemplate(o)){ tplSeen = true; continue; }
     var keys = Object.keys(o);
     var hit = keys.filter(function(k){ return KNOWN[k]; }).length;
     // 优先选含已知字段的、字段更多的、体量更大的
-    var score = hit*1000 + keys.length*10 + cands[i].length/1000;
+    var score = hit*1000 + keys.length*10 + cands[i].length/1000 + i*0.0001;
     if(score > bestScore){ bestScore = score; best = o; }
   }
+  if(!best && tplSeen)
+    throw new Error("AI 把结构示例原样抄了回来，没给真实结果。让它真的填一遍再输出。");
   if(!best) throw new Error("找到花括号但都不是合法 JSON");
   return best;
 }
@@ -1835,7 +1851,21 @@ document.getElementById("io-parse").addEventListener("click", function(){
   try{ obj = extractJSON(text); mode="JSON"; }
   catch(e){
     obj = loose(text);
-    if(obj){ mode="粗略"; } else { msg("解析失败："+e.message+"。请确认 AI 输出的是 JSON。","err"); return; }
+    if(obj){ mode="粗略"; }
+    else {
+      var why = String(e.message || e);
+      if(/需求单|目的地|出发日期/.test(text) && text.indexOf("{") < 0){
+        why = "AI 只回了需求单，没有给 JSON。让它继续输出 JSON，或者在提示词最后补一句「现在只输出 JSON，不要别的」。";
+      }else if(why.indexOf("没找到 JSON") >= 0){
+        why = "你粘的这段里没有 JSON。往回翻一下 AI 的回复，它可能把结果放在了更后面；或者让它重新按格式输出一次。";
+      }else if(why.indexOf("结构示例") >= 0){
+        why = "AI 把提示词里的结构示例原样抄了回来，没有真的填内容。让它按需求单重新输出一遍真实结果。";
+      }else if(text.indexOf("{") >= 0){
+        why = "找到了花括号但没法解析（" + why + "）。多半是 JSON 被截断了，让 AI 重新完整输出一遍。";
+      }
+      msg("解析失败：" + why, "err");
+      return;
+    }
   }
   if(mode==="粗略"){
     DATA = JSON.parse(JSON.stringify(SAMPLE));

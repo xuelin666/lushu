@@ -8,7 +8,7 @@
 
 ### 方式一：直接装 APK
 
-👉 **[下载 lushu-v1.1.apk](https://github.com/xuelin666/lushu/releases/download/v1.1/lushu-v1.1.apk)**
+👉 **[下载 lushu-v1.2.apk](https://github.com/xuelin666/lushu/releases/download/v1.2/lushu-v1.2.apk)**
 
 手机上点开安装。首次需要在系统里允许「安装未知来源应用」。
 支持 Android 8.0 及以上，完全离线，不联网。

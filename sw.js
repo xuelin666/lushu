@@ -1,6 +1,6 @@
 /* 路书 · Service Worker
    整个应用是单文件、资源全内嵌，所以只需要把外壳缓存下来即可离线运行。 */
-var CACHE = "lushu-v4";
+var CACHE = "lushu-v5";
 var SHELL = ["./", "./index.html", "./manifest.webmanifest",
              "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png"];
 
