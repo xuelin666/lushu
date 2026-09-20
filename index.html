@@ -379,6 +379,21 @@ body{margin:0;padding:22px 12px 60px;background:#e9e6dc;
   font-family:ui-monospace,Consolas,monospace;font-size:9.5px;letter-spacing:.14em}
 .io-or::before,.io-or::after{content:"";flex:1;border-top:1.5px dashed #cfd9de}
 .io-ta.short{min-height:78px}
+.io-btn.ai{background:linear-gradient(180deg,#f0b64a,#dfa32a);border-color:#dfa32a;color:#fff;font-weight:600}
+.io-set{margin-top:12px;border-top:1.5px dashed #cfd9de;padding-top:9px}
+.io-set summary{cursor:pointer;color:#6d8fa4;letter-spacing:.14em;list-style:none}
+.io-set summary::-webkit-details-marker{display:none}
+.io-set summary::before{content:"▸ ";}
+.io-set[open] summary::before{content:"▾ ";}
+.io-setgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin-top:9px}
+.io-setgrid>div{min-width:0}
+.io-setgrid .full{grid-column:1/-1}
+.io-setgrid .ls-clabel{display:block;margin-bottom:2px}
+.io-setgrid input,.io-setgrid select{border:0;border-bottom:1.5px dashed #dbeef8;background:transparent;
+  font:inherit;font-size:11.5px;color:#1e8cc7;padding:3px 0;min-width:0;width:100%}
+.io-setgrid input:focus,.io-setgrid select:focus{outline:none;border-bottom-color:#34b1db;border-bottom-style:solid}
+.io-note{font-size:11px;color:#9db3bf;margin-top:8px;line-height:1.6}
+.io-note b{color:#c85a1c}
 .io-btns{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
 .io-btn{border:1.5px solid #dbeef8;background:#f4fafd;color:#2a5f86;font:inherit;font-size:12px;
   border-radius:99px;padding:6px 14px;cursor:pointer}
@@ -498,21 +513,57 @@ body{margin:0;padding:22px 12px 60px;background:#e9e6dc;
         </div>
       </div>
       <div class="io-btns">
-        <button class="io-btn primary" id="io-copy">按这张票生成提示词并复制</button>
+        <button class="io-btn ai" id="io-gen">⚡ 直接生成行程</button>
+        <button class="io-btn" id="io-copy">生成提示词并复制</button>
       </div>
 
       <div class="io-or">懒得填票？用一句话</div>
 
       <textarea class="io-ta short" id="f-lazy" spellcheck="false" placeholder="我们四个人，准备国庆去江西玩，想走庐山、景德镇、婺源、三清山，开电车自驾，不想太赶。"></textarea>
       <div class="io-btns">
-        <button class="io-btn gold" id="io-copy-lazy">用这句话生成提示词并复制</button>
+        <button class="io-btn ai" id="io-gen-lazy">⚡ 直接用这句话生成</button>
+        <button class="io-btn" id="io-copy-lazy">复制提示词</button>
       </div>
       <div class="io-msg" id="io-msg"></div>
 
       <div class="ls-fog" style="margin-top:10px;font-size:11px">
-        上面两个按钮都是<b>一次复制、一次粘贴</b>。你粘给 AI 之后不用再多说任何话——
-        提示词里已经写清楚要它补全什么、检查什么、最后按什么格式输出。
+        <b>装了 APK 的话</b>，在下面「直连设置」里填一次 API Key，之后点金色按钮就<b>直接出结果</b>，
+        不用再复制粘贴。<br>
+        <b>用浏览器打开的话</b>没有原生通道，只能走复制粘贴那条路。
       </div>
+
+      <details class="io-set" id="io-setbox">
+        <summary class="ls-mono">直连设置 · 填了就能一键生成</summary>
+        <div class="io-setgrid">
+          <div class="full"><label class="ls-clabel">模型服务商</label>
+            <select id="set-provider"></select></div>
+          <div class="full"><label class="ls-clabel">API Key</label>
+            <input id="set-key" type="password" autocomplete="off" placeholder="sk-..."></div>
+          <div><label class="ls-clabel">模型名</label>
+            <input id="set-model" autocomplete="off" placeholder="deepseek-chat"></div>
+          <div><label class="ls-clabel">推理强度</label>
+            <select id="set-temp">
+              <option value="0.3">稳（少发挥）</option>
+              <option value="0.7">正常</option>
+              <option value="1.0">奔放</option>
+            </select></div>
+          <div class="full"><label class="ls-clabel">接口地址 · 只有选「自定义」才需要填</label>
+            <input id="set-url" autocomplete="off" placeholder="https://.../chat/completions"></div>
+
+          <div class="full" style="border-top:1.5px dashed #eef4f7;padding-top:9px;margin-top:1px">
+            <label class="ls-clabel">和风天气 Key · 可选，填了能自动刷新天气</label>
+            <input id="set-qwkey" type="password" autocomplete="off" placeholder="和风天气控制台的 Key"></div>
+          <div><label class="ls-clabel">和风 API Host</label>
+            <input id="set-qwhost" autocomplete="off" placeholder="xxxxx.re.qweatherapi.com"></div>
+          <div><label class="ls-clabel">天气城市</label>
+            <input id="set-city" autocomplete="off" placeholder="留空则自动判断"></div>
+        </div>
+        <div class="io-btns">
+          <button class="io-btn primary" id="io-save">保存设置</button>
+          <button class="io-btn" id="io-test">测试连接</button>
+        </div>
+        <div class="io-note" id="set-note">设置只存在这台手机上，不会上传到任何地方。</div>
+      </details>
 
       <img class="ls-divider" src="data:image/webp;base64,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" alt="">
 
@@ -1147,6 +1198,10 @@ function render(){
        }).join("")+
        (intelEditing?'<button class="ls-add" data-addrem>＋ 添加一条提醒</button>':'')+
        '<div class="ls-foot">'+(it.channel||[]).map(function(c){ return '<span class="ls-pill ls-mono">'+esc(c)+'</span>'; }).join("")+'</div></div>';
+  h += '<div class="ls-editbar" style="margin-top:11px">'+
+       '<button class="ls-save" data-ai-intel>⚡ 直接刷新情报</button>'+
+       '<button class="ls-cancel" data-weather>🌤 刷新天气</button>'+
+       '<span class="ls-mono">'+(Native?"走直连，不用复制粘贴":"浏览器里不可用，用下面面板")+'</span></div>';
   h += mini("GIF_潜水","待接入","推送要配好 ntfy 才能真正发到手机，现在只做到界面。",true);
   h += '</section>';
 
@@ -1349,9 +1404,21 @@ function bind(){
 
   /* 增删：改完重绘 */
   host.addEventListener("click", function(e){
-    var t = e.target.closest ? e.target.closest("[data-edit-toggle],[data-additem],[data-delitem],[data-addgroup],[data-delgroup],[data-log-edit-toggle],[data-dellog],[data-editlog],[data-canceledit],[data-addlog],[data-setstar],[data-intel-edit-toggle],[data-addnote],[data-delnote],[data-addrem],[data-delrem],[data-copyshop],[data-savetpl],[data-applytpl],[data-deltpl],[data-ics],[data-copydays],[data-book]") : null;
+    var t = e.target.closest ? e.target.closest("[data-edit-toggle],[data-additem],[data-delitem],[data-addgroup],[data-delgroup],[data-log-edit-toggle],[data-dellog],[data-editlog],[data-canceledit],[data-addlog],[data-setstar],[data-intel-edit-toggle],[data-addnote],[data-delnote],[data-addrem],[data-delrem],[data-copyshop],[data-savetpl],[data-applytpl],[data-deltpl],[data-ics],[data-copydays],[data-book],[data-ai-intel],[data-weather]") : null;
     if(!t) return;
     var ds = t.dataset;
+    if(ds.aiIntel !== undefined){
+      toast("正在刷新情报，可能要十几秒…");
+      directGenerate(buildIntelPrompt()).then(function(r2){ toast(r2); })
+        .catch(function(e){ toast("刷新失败：" + e.message); });
+      return;
+    }
+    if(ds.weather !== undefined){
+      toast("正在查天气…");
+      refreshWeather().then(function(n){ toast("天气已更新 · " + n + " 天"); })
+        .catch(function(e){ toast("天气获取失败：" + e.message); });
+      return;
+    }
     if(ds.copyshop !== undefined){
       var sl = shortList();
       if(!sl.total){ toast("清单已经装齐了，没有要采购的。"); return; }
@@ -1579,6 +1646,187 @@ function loose(text){
 
 var KNOWN = {trip:"顶栏",days:"行程",plan:"规划票根",intel:"情报",packing:"出门清单",logs:"档案",metrics:"档案统计",atlas:"图鉴"};
 
+/* ================= 直连：原生桥 + 大模型 + 天气 ================= */
+var SETSTORE = "lushu.set.v1";
+var PROVIDERS = {
+  deepseek: { name:"DeepSeek", url:"https://api.deepseek.com/chat/completions", model:"deepseek-chat" },
+  qwen:     { name:"通义千问（阿里云百炼）", url:"https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions", model:"qwen-plus" },
+  kimi:     { name:"Kimi（月之暗面）", url:"https://api.moonshot.cn/v1/chat/completions", model:"moonshot-v1-8k" },
+  zhipu:    { name:"智谱 GLM", url:"https://open.bigmodel.cn/api/paas/v4/chat/completions", model:"glm-4-flash" },
+  custom:   { name:"自定义（OpenAI 兼容）", url:"", model:"" }
+};
+var SET = { provider:"deepseek", key:"", model:"", url:"", temp:"0.7", qwKey:"", qwHost:"", city:"" };
+try{ var rs0 = localStorage.getItem(SETSTORE); if(rs0){ var o0 = JSON.parse(rs0)||{}; for(var k0 in o0){ if(SET.hasOwnProperty(k0)) SET[k0]=o0[k0]; } } }catch(e){}
+
+var Native = (typeof LushuNative !== "undefined" && LushuNative) ? LushuNative : null;
+var callSeq = 1, callWait = {};
+window.__lhReply = function(id, res){
+  var cb = callWait[id];
+  if(cb){ delete callWait[id]; cb(res); }
+};
+function nativeRequest(url, method, headers, body){
+  return new Promise(function(resolve, reject){
+    if(!Native){ reject(new Error("当前环境没有原生通道（用浏览器打开就是这样）")); return; }
+    var id = callSeq++;
+    var done = false;
+    callWait[id] = function(res){
+      if(done) return; done = true;
+      if(!res){ reject(new Error("原生层没有返回")); return; }
+      if(res.error){ reject(new Error(res.error)); return; }
+      if(!res.ok){ reject(new Error("HTTP " + res.status + (res.body ? " · " + String(res.body).slice(0,180) : ""))); return; }
+      resolve(res.body);
+    };
+    try{
+      Native.request(String(id), url, method || "GET", JSON.stringify(headers||{}), body || "");
+    }catch(e){ delete callWait[id]; reject(new Error("调用原生通道失败：" + e)); return; }
+    setTimeout(function(){
+      if(callWait[id]){ delete callWait[id]; if(!done){ done = true; reject(new Error("请求超时")); } }
+    }, 150000);
+  });
+}
+
+function saveSet(){ try{ localStorage.setItem(SETSTORE, JSON.stringify(SET)); }catch(e){} }
+function syncSetForm(){
+  var box = document.getElementById("set-provider");
+  if(!box) return;
+  if(!box.options.length){
+    Object.keys(PROVIDERS).forEach(function(k){
+      var o = document.createElement("option"); o.value = k; o.textContent = PROVIDERS[k].name; box.appendChild(o);
+    });
+  }
+  box.value = SET.provider || "deepseek";
+  var f = function(id,v){ var el=document.getElementById(id); if(el) el.value = v||""; };
+  f("set-key", SET.key); f("set-model", SET.model); f("set-url", SET.url);
+  f("set-qwkey", SET.qwKey); f("set-qwhost", SET.qwHost); f("set-city", SET.city);
+  var t = document.getElementById("set-temp"); if(t) t.value = String(SET.temp||"0.7");
+  var note = (Native ? "已就绪" : "浏览器环境：没有原生通道，直连不可用，请用复制粘贴那条路。");
+  setNote(note + (SET.key ? " · 已填 Key" : " · 还没填 Key"), false);
+}
+function readSetForm(){
+  var g = function(id){ var el=document.getElementById(id); return el ? el.value.trim() : ""; };
+  SET.provider = g("set-provider") || "deepseek";
+  SET.key = g("set-key"); SET.model = g("set-model"); SET.url = g("set-url");
+  SET.temp = g("set-temp") || "0.7";
+  SET.qwKey = g("set-qwkey"); SET.qwHost = g("set-qwhost"); SET.city = g("set-city");
+  saveSet();
+}
+function setNote(text, isErr){
+  var el = document.getElementById("set-note");
+  if(!el) return;
+  el.innerHTML = text;
+  el.style.color = isErr ? "#d8483a" : "#9db3bf";
+}
+
+function providerConf(){
+  var p = PROVIDERS[SET.provider] || PROVIDERS.custom;
+  var url = (SET.provider === "custom" ? (SET.url||"").trim() : p.url);
+  var model = (SET.model||"").trim() || p.model;
+  return { url: url, model: model };
+}
+function aiChat(promptText){
+  var c = providerConf();
+  if(!c.url) return Promise.reject(new Error("没有填接口地址"));
+  if(!c.model) return Promise.reject(new Error("没有填模型名"));
+  if(!(SET.key||"").trim()) return Promise.reject(new Error("没有填 API Key"));
+  var body = JSON.stringify({
+    model: c.model,
+    messages: [{ role:"user", content: promptText }],
+    temperature: Number(SET.temp || 0.7),
+    stream: false
+  });
+  return nativeRequest(c.url, "POST", {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + SET.key.trim()
+  }, body).then(function(raw){
+    var j;
+    try{ j = JSON.parse(raw); }
+    catch(e){ throw new Error("返回不是 JSON：" + String(raw).slice(0,120)); }
+    if(j && j.error) throw new Error(String(j.error.message || JSON.stringify(j.error)).slice(0,180));
+    var t = j && j.choices && j.choices[0] && j.choices[0].message ? j.choices[0].message.content : "";
+    if(!t) throw new Error("返回里没有正文");
+    return t;
+  });
+}
+function guessCity(){
+  var a = DATA.atlas;
+  if(a && a.visited && a.visited.length && a.visited[0].n) return a.visited[0].n;
+  var d = (DATA.days||[])[0];
+  if(d && d.route){
+    var parts = String(d.route).split(/[→>]/);
+    if(parts.length > 1) return parts[parts.length-1].trim();
+  }
+  return "";
+}
+function applyWeather(daily){
+  if(!DATA.intel) DATA.intel = {};
+  var list = daily.map(function(f, i){
+    var rain = /雨|雪|雷|冰雹/.test(String(f.textDay||""));
+    return { i:i, d:String(i+1), t:f.textDay || "", r:(f.tempMin||"") + "/" + (f.tempMax||""),
+             rain:rain, date:f.fxDate || "" };
+  });
+  DATA.intel.weather = list.map(function(x){ return { d:x.d, t:x.t, r:x.r, rain:x.rain }; });
+  (DATA.days||[]).forEach(function(d, idx){
+    var full = dayFull(d.date), hit = null;
+    for(var i=0;i<list.length;i++){ if(list[i].date && list[i].date === full){ hit = list[i]; break; } }
+    if(!hit) hit = list[idx] || null;
+    if(hit){ d.weather = hit.t + " " + String(hit.r).replace("/", "–") + "℃"; d.rain = hit.rain; }
+  });
+  saveAll(); render();
+}
+function refreshWeather(){
+  if(!Native) return Promise.reject(new Error("浏览器环境没有原生通道"));
+  var host = (SET.qwHost||"").trim().replace(/^https?:\/\//i,"").replace(/\/+$/,"");
+  var key = (SET.qwKey||"").trim();
+  if(!host || !key) return Promise.reject(new Error("先在「直连设置」里填和风天气的 Key 和 API Host"));
+  var city = (SET.city||"").trim() || guessCity();
+  if(!city) return Promise.reject(new Error("填一下天气城市，或者让行程里有个目的地"));
+  var hdr = { "X-QW-Api-Key": key };
+  var geoUrl = "https://" + host + "/geo/v2/city/lookup?location=" + encodeURIComponent(city) + "&key=" + encodeURIComponent(key);
+  return nativeRequest(geoUrl, "GET", hdr, null).then(function(raw){
+    var geo = JSON.parse(raw);
+    if(geo.code !== "200" || !geo.location || !geo.location.length)
+      throw new Error("找不到城市「" + city + "」（和风返回 code " + geo.code + "）");
+    var locId = geo.location[0].id;
+    var wUrl = "https://" + host + "/v7/weather/7d?location=" + encodeURIComponent(locId) + "&key=" + encodeURIComponent(key);
+    return nativeRequest(wUrl, "GET", hdr, null);
+  }).then(function(raw2){
+    var w = JSON.parse(raw2);
+    if(w.code !== "200" || !w.daily) throw new Error("天气接口返回 code " + w.code);
+    applyWeather(w.daily);
+    return w.daily.length;
+  });
+}
+function directGenerate(promptText, okPrefix){
+  if(!Native) return Promise.reject(new Error("当前环境没有原生通道（浏览器打开就是这样），请用复制粘贴那条路"));
+  var c = providerConf();
+  if(!(SET.key||"").trim() || !c.url || !c.model)
+    return Promise.reject(new Error("先在「直连设置」里填好服务商、API Key 和模型名"));
+  return aiChat(promptText).then(function(text){
+    var obj = null;
+    try{ obj = extractJSON(text); }
+    catch(e){ obj = loose(text); }
+    if(!obj) throw new Error("AI 的回复里没有找到可用的 JSON，它可能没按格式输出，换一次试试");
+    var r = applyImport(obj);
+    if(!r.ok) throw new Error(r.msg);
+    return (okPrefix || "") + r.msg;
+  });
+}
+function applyImport(obj){
+  var hit = Object.keys(obj).filter(function(k){ return KNOWN[k]; });
+  if(hit.length === 0) return { ok:false, msg:"这份 JSON 里没有能识别的字段（trip / days / plan / intel / packing / logs / metrics / atlas）。" };
+  if(hit.length === 1 && hit[0] !== "trip"){
+    DATA[hit[0]] = obj[hit[0]];
+    render(); saveAll();
+    setState((DATA.trip && DATA.trip.title) || "导入的行程");
+    return { ok:true, msg:"只更新了「" + KNOWN[hit[0]] + "」这一块，其他四屏原样没动。" };
+  }
+  DATA = obj;
+  render(); saveAll();
+  setState((DATA.trip && DATA.trip.title) || "导入的行程");
+  return { ok:true, msg:"已载入整份路书 · " + (DATA.days||[]).length + " 天行程 · " +
+    (((DATA.intel && DATA.intel.notes)||[]).length) + " 条注意事项" };
+}
+
 document.getElementById("io-parse").addEventListener("click", function(){
   var ta = document.getElementById("io-ta");
   var text = ta.value.trim();
@@ -1595,22 +1843,12 @@ document.getElementById("io-parse").addEventListener("click", function(){
     DATA.days = obj.days;
     msg("没识别到 JSON，已按行粗略提取 "+obj.days.length+" 天，只有行程表被替换。","err");
   }else{
-    var hit = Object.keys(obj).filter(function(k){ return KNOWN[k]; });
-    if(hit.length === 1 && hit[0] !== "trip"){
-      DATA[hit[0]] = obj[hit[0]];
-      msg("只更新了「"+KNOWN[hit[0]]+"」这一块，其他四屏原样没动。","ok");
-    }else if(hit.length === 0){
-      msg("这份 JSON 里没有能识别的字段（trip / days / plan / intel / packing / logs / metrics / atlas）。","err");
-      return;
-    }else{
-      DATA = obj;
-      var dn = (DATA.days||[]).length;
-      var nm = ((DATA.intel&&DATA.intel.notes)||[]).length;
-      msg("已载入整份路书 · " + dn + " 天行程 · " + nm + " 条注意事项", "ok");
-    }
+    var res0 = applyImport(obj);
+    msg(res0.msg, res0.ok ? "ok" : "err");
+    if(!res0.ok) return;
   }
   render();
-  try{ localStorage.setItem(STORE, JSON.stringify(DATA)); }catch(e){}
+  saveAll();
   setState((DATA.trip&&DATA.trip.title)||"导入的行程");
 });
 
@@ -1670,6 +1908,50 @@ document.getElementById("io-clear").addEventListener("click", function(){
   document.getElementById("io-ta").value = ""; msg("");
 });
 
+/* 直连相关的按钮 */
+document.getElementById("io-gen").addEventListener("click", function(){
+  msg("正在让 AI 生成行程，可能要十几秒…");
+  directGenerate(buildPrompt(), "AI 直接生成 · ").then(function(t){
+    msg(t, "ok");
+  }).catch(function(e){
+    msg("生成失败：" + e.message, "err");
+    if(!Native || !(SET.key||"").trim()){ var b=document.getElementById("io-setbox"); if(b) b.open = true; }
+  });
+});
+document.getElementById("io-gen-lazy").addEventListener("click", function(){
+  if(!lazyText()){ msg("先在下面那个框里用一句话说说你的想法。","err"); document.getElementById("f-lazy").focus(); return; }
+  msg("正在让 AI 先补全需求单再生成，可能要二三十秒…");
+  directGenerate(buildMetaPrompt(), "AI 直接生成 · ").then(function(t){
+    msg(t, "ok");
+  }).catch(function(e){
+    msg("生成失败：" + e.message, "err");
+    if(!Native || !(SET.key||"").trim()){ var b=document.getElementById("io-setbox"); if(b) b.open = true; }
+  });
+});
+document.getElementById("io-save").addEventListener("click", function(){
+  readSetForm();
+  setNote("已保存 · " + (SET.key ? "Key 已填" : "还没填 Key") + (SET.qwKey ? " · 天气已配" : ""), false);
+  toast("设置已保存");
+});
+document.getElementById("io-test").addEventListener("click", function(){
+  readSetForm();
+  if(!Native){ setNote("浏览器环境没有原生通道，直连不可用。<b>请用复制粘贴那条路。</b>", true); return; }
+  if(!(SET.key||"").trim()){ setNote("先填 API Key。", true); return; }
+  setNote("正在测试…", false);
+  aiChat("只回复两个字：可用").then(function(t){
+    setNote("连接正常 · 模型回复：" + String(t).trim().slice(0,40), false);
+  }).catch(function(e){
+    setNote("失败：" + e.message, true);
+  });
+});
+document.getElementById("set-provider").addEventListener("change", function(){
+  var p = PROVIDERS[this.value];
+  if(!p) return;
+  document.getElementById("set-model").value = p.model || "";
+  if(this.value !== "custom") document.getElementById("set-url").value = p.url || "";
+});
+
+syncSetForm();
 render();
 setState((DATA.trip&&DATA.trip.title)||"示例行程");
 
